@@ -157,6 +157,7 @@ public class MapsPresenter extends BasePresenter<MapsContract.View> implements M
 
     @Override
     public void updateMapMaker(int space, int density, Integer[] areaChoice) {
+        //Log.d(TAG, "space:" + space + " density:" + density);
         ArrayList<PlaceDetailEntity> placeDetailEntities = new ArrayList<>();
         PlaceEntity placeEntity = FirebaseRepository.getInstance().getPlaceEntity();
 
@@ -169,8 +170,11 @@ public class MapsPresenter extends BasePresenter<MapsContract.View> implements M
             googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
             for (int i = 0; i < placeDetailEntities.size(); i++) {
                 String district = placeDetailEntities.get(i).getDistrict();
+                int spaceRank = placeDetailEntities.get(i).getnDVIrank();
+                int densityRank = placeDetailEntities.get(i).getBudenrank();
+               // Log.d(TAG,"spaceRank:"+spaceRank+ " densityRank:"+densityRank);
 
-                if (isInTargetArea(areaChoice, district)) {
+                if (isInTargetArea(areaChoice, district) && spaceRank <= space && densityRank<= density) {
                     LatLng latLng = new LatLng(placeDetailEntities.get(i).getLat(), placeDetailEntities.get(i).getLng());
                     String content = String.format("成交時間:%s\n地址:%s\n土地移轉面積:%s\n建築物移轉面積:%s\n總價:%s\n單價:%s",
                             placeDetailEntities.get(i).getSeason(),
@@ -213,15 +217,15 @@ public class MapsPresenter extends BasePresenter<MapsContract.View> implements M
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        Log.d(TAG, "marker:" + marker.getTitle());
+      //  Log.d(TAG, "marker:" + marker.getTitle());
         return false;
     }
 
     @Override
     public void onInfoWindowClick(Marker marker) {
-        MapDetailActivity.newIntent(fragmentActivity,marker.getSnippet(),marker.getTitle());
+        MapDetailActivity.newIntent(fragmentActivity, marker.getSnippet(), marker.getTitle());
 
-        Log.d(TAG, "marker:" + marker.getTitle());
+       // Log.d(TAG, "marker:" + marker.getTitle());
     }
 
     private boolean isInTargetArea(Integer[] areaChoice, String districtChoice) {

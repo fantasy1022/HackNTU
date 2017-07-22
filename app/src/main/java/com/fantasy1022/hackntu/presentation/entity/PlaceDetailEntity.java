@@ -109,23 +109,37 @@ public class PlaceDetailEntity {
         return nDVI;
     }
 
-    public String getnDVIrank() {
-        return nDVIrank;
+    public int getnDVIrank() {
+        if (nDVIrank == null || nDVIrank.equals("")) {
+            return (int) (Math.random() * 6);
+        } else {
+            return Integer.parseInt(nDVIrank);
+        }
     }
 
     public String getBuden() {
         return buden;
     }
 
-    public String getBudenrank() {
-        return budenrank;
+    public int getBudenrank() {
+        if (budenrank == null || budenrank.equals("")) {
+            return (int) (Math.random() * 6);
+        } else {
+            return Integer.parseInt(budenrank);
+        }
     }
 
     public String getElec() {
         return elec;
     }
 
-    public String getElecrank() {
-        return elecrank;
+    public int getElecrank() {
+
+        if (elecrank == null || elecrank.equals("")) {
+            return (int) (Math.random() * 6);
+        } else {
+            return Integer.parseInt(elecrank);
+        }
+
     }
 }

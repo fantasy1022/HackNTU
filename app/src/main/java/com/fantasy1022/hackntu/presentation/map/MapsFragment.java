@@ -86,7 +86,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, MapsCo
 
             @Override
             public void getProgressOnFinally(int progress, float progressFloat) {
-
+                space = progress;
+                mapPresenter.updateMapMaker(space, density, areaItem);
             }
         });
         seekbarSpace.setProgress(space);
@@ -104,7 +105,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, MapsCo
 
             @Override
             public void getProgressOnFinally(int progress, float progressFloat) {
-
+                density = progress;
+                mapPresenter.updateMapMaker(space, density, areaItem);
             }
         });
 
