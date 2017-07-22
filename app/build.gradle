@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'android-apt'
 
 android {
     compileSdkVersion 25
@@ -11,6 +10,8 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
+
     }
     buildTypes {
         release {
@@ -30,11 +31,12 @@ ext {
     picassoVersion = '2.5.2'
 
     //Tool
-    butterKnifeVersion = '8.4.0'
+    butterKnifeVersion = '8.7.0'
     eventBusVersion = '3.0.0'
 
     //UI
     bubbleseekbarVersion = '3.5-lite'
+    materialDialogsVersion  = "0.9.4.5"
 
 }
 dependencies {
@@ -52,10 +54,14 @@ dependencies {
     compile "com.google.android.gms:play-services:$playserviceVersion"
 
     compile "com.jakewharton:butterknife:$butterKnifeVersion"
+    annotationProcessor "com.jakewharton:butterknife-compiler:$butterKnifeVersion"
+
     compile "org.greenrobot:eventbus:$eventBusVersion"
 
     compile "com.xw.repo:bubbleseekbar:$bubbleseekbarVersion"
     compile "com.squareup.picasso:picasso:$picassoVersion"
+
+    compile "com.afollestad.material-dialogs:core:$materialDialogsVersion"
 
 }
 

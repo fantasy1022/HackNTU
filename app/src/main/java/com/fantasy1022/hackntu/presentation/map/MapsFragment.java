@@ -37,10 +37,13 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, MapsCo
 
     private final String TAG = getClass().getSimpleName();
     private MapsPresenter mapPresenter;
-    @BindView(R.id.map_type_spinner)
-    Spinner mapTypeSpinner;
-    @BindView(R.id.seekbar)
-    BubbleSeekBar seekBar;
+//    @BindView(R.id.map_type_spinner)
+//    Spinner mapTypeSpinner;
+
+    @BindView(R.id.seekbarLeft)
+    BubbleSeekBar seekbarLeft;
+    @BindView(R.id.seekbarRight)
+    BubbleSeekBar seekbarRight;
     private boolean isSync;
 
 
@@ -77,19 +80,53 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, MapsCo
         ButterKnife.bind(this, rootView);
 //        MapTypeAdapter adapter = new MapTypeAdapter(getActivity().getResources().getStringArray(R.array.map_type_spinner), getActivity().getResources().getIntArray(R.array.colorTypeMaps));
 //        mapTypeSpinner.setAdapter(adapter);
-//        seekBar.setOnProgressChangedListener(this);
-//        seekBar.setProgress(4);
-//        typeIndex = TYPE_ROAD;
+        seekbarLeft.setOnProgressChangedListener(new BubbleSeekBar.OnProgressChangedListener() {
+            @Override
+            public void onProgressChanged(int progress, float progressFloat) {
+
+            }
+
+            @Override
+            public void getProgressOnActionUp(int progress, float progressFloat) {
+
+            }
+
+            @Override
+            public void getProgressOnFinally(int progress, float progressFloat) {
+
+            }
+        });
+        seekbarLeft.setProgress(1);
+
+        seekbarRight.setOnProgressChangedListener(new BubbleSeekBar.OnProgressChangedListener() {
+            @Override
+            public void onProgressChanged(int progress, float progressFloat) {
+
+            }
+
+            @Override
+            public void getProgressOnActionUp(int progress, float progressFloat) {
+
+            }
+
+            @Override
+            public void getProgressOnFinally(int progress, float progressFloat) {
+
+            }
+        });
+
+        seekbarRight.setProgress(1);
+
         weekSeekBar = 4;
         return rootView;
     }
 
-    @OnItemSelected(R.id.map_type_spinner)
-    public void onMapTypeSelected(Spinner spinner, int position) {
-        Log.d(TAG, "position:" + position);
-        typeIndex = position;
-        mapPresenter.updateMapMaker(typeIndex, weekSeekBar);
-    }
+//    @OnItemSelected(R.id.map_type_spinner)
+//    public void onMapTypeSelected(Spinner spinner, int position) {
+//        Log.d(TAG, "position:" + position);
+//        typeIndex = position;
+//        mapPresenter.updateMapMaker(typeIndex, weekSeekBar);
+//    }
 
     @Override
     public void onStart() {
