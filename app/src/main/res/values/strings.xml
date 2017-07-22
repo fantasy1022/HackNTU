@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">HackNTU</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="map_week">週內</string>
 </resources>
