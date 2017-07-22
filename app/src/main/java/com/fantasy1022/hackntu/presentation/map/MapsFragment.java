@@ -1,7 +1,5 @@
 package com.fantasy1022.hackntu.presentation.map;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -11,7 +9,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Spinner;
 
 import com.fantasy1022.hackntu.R;
 import com.fantasy1022.hackntu.presentation.event.DataChangeEvent;
@@ -28,12 +25,10 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnItemSelected;
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback, MapsContract.View,
         GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener,
-        BubbleSeekBar.OnProgressChangedListener {
+        GoogleApiClient.OnConnectionFailedListener {
 
     private final String TAG = getClass().getSimpleName();
     private MapsPresenter mapPresenter;
@@ -41,16 +36,14 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, MapsCo
 //    Spinner mapTypeSpinner;
 
     @BindView(R.id.seekbarLeft)
-    BubbleSeekBar seekbarLeft;
+    BubbleSeekBar seekbarSpace;
     @BindView(R.id.seekbarRight)
-    BubbleSeekBar seekbarRight;
+    BubbleSeekBar seekbarDensity;
     private boolean isSync;
 
-
-    private
-    @MapsPresenter.MapTypeMode
-    int typeIndex;
-    private int weekSeekBar;
+    private int space = 5;
+    private int density = 5;
+    private Integer[] areaItem = new Integer[]{0, 1, 2, 3, 4};
 
 
     public MapsFragment() {
@@ -65,7 +58,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, MapsCo
             Log.d(TAG, "mapPresenter");
             mapPresenter = new MapsPresenter(getActivity());
             mapPresenter.initGoogleApiClient(this, this);
-            //mapPresenter.getDateFromFirebase(Constant.KEY_FIREBASE_MAP_TYPE);
+            mapPresenter.getDateFromFirebase("map_type");
 
 //            mapPresenter.updateLocationUI();
 //            mapPresenter.getDeviceLocation();
@@ -80,7 +73,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, MapsCo
         ButterKnife.bind(this, rootView);
 //        MapTypeAdapter adapter = new MapTypeAdapter(getActivity().getResources().getStringArray(R.array.map_type_spinner), getActivity().getResources().getIntArray(R.array.colorTypeMaps));
 //        mapTypeSpinner.setAdapter(adapter);
-        seekbarLeft.setOnProgressChangedListener(new BubbleSeekBar.OnProgressChangedListener() {
+        seekbarSpace.setOnProgressChangedListener(new BubbleSeekBar.OnProgressChangedListener() {
             @Override
             public void onProgressChanged(int progress, float progressFloat) {
 
@@ -96,9 +89,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, MapsCo
 
             }
         });
-        seekbarLeft.setProgress(1);
+        seekbarSpace.setProgress(space);
 
-        seekbarRight.setOnProgressChangedListener(new BubbleSeekBar.OnProgressChangedListener() {
+        seekbarDensity.setOnProgressChangedListener(new BubbleSeekBar.OnProgressChangedListener() {
             @Override
             public void onProgressChanged(int progress, float progressFloat) {
 
@@ -115,9 +108,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, MapsCo
             }
         });
 
-        seekbarRight.setProgress(1);
+        seekbarDensity.setProgress(density);
 
-        weekSeekBar = 4;
+
         return rootView;
     }
 
@@ -151,8 +144,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, MapsCo
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         Log.d(TAG, "Play services connection onConnected");
-        if(!isSync){
-            isSync=true;
+        if (!isSync) {
+            isSync = true;
             SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
                     .findFragmentById(R.id.map_fragment);
             mapFragment.getMapAsync(this);
@@ -182,20 +175,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, MapsCo
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                mapPresenter.updateMapMaker(typeIndex, weekSeekBar);
+                mapPresenter.updateMapMaker(space, density, areaItem);
             }
         }, 1000);
     }
 
-    @Override
-    public void onProgressChanged(int progress, float progressFloat) {
-        //Do nothing
-    }
-
-    @Override
-    public void getProgressOnActionUp(int progress, float progressFloat) {
-        //Do nothing
-    }
 
     @Override
     public void onResume() {
@@ -205,10 +189,13 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, MapsCo
         mapFragment.getMapAsync(this);
     }
 
-    @Override
-    public void getProgressOnFinally(int progress, float progressFloat) {
-        weekSeekBar = progress;
-        mapPresenter.updateMapMaker(typeIndex, weekSeekBar);
+    public void updateAreaChoice(Integer[] which) {
+        areaItem = which;
+        mapPresenter.updateMapMaker(space, density, areaItem);
+    }
+
+    public Integer[] getAreaItem(){
+        return areaItem;
     }
 
 }

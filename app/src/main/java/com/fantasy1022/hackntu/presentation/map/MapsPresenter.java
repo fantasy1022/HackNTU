@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
+import com.fantasy1022.hackntu.R;
 import com.fantasy1022.hackntu.presentation.base.BasePresenter;
 import com.fantasy1022.hackntu.presentation.entity.PlaceDetailEntity;
 import com.fantasy1022.hackntu.presentation.entity.PlaceEntity;
@@ -46,10 +47,12 @@ public class MapsPresenter extends BasePresenter<MapsContract.View> implements M
     private boolean locationPermissionGranted;
     private Location lastKnownLocation;
     private CameraPosition cameraPosition;
-
+    private String[] areaItem;
+    private BitmapDescriptor bitmapDescriptor;
 
     public MapsPresenter(FragmentActivity fragmentActivity) {
         this.fragmentActivity = fragmentActivity;
+
     }
 
     @Override
@@ -75,6 +78,8 @@ public class MapsPresenter extends BasePresenter<MapsContract.View> implements M
         this.googleMap = googleMap;
         googleMap.setOnMarkerClickListener(this);
         googleMap.setOnInfoWindowClickListener(this);
+        areaItem = fragmentActivity.getResources().getStringArray(R.array.choice_area_item);
+        bitmapDescriptor = getMarkerIcon(ContextCompat.getColor(fragmentActivity, R.color.colorRoad));
     }
 
 
@@ -152,45 +157,43 @@ public class MapsPresenter extends BasePresenter<MapsContract.View> implements M
     }
 
     @Override
-    public void updateMapMaker(@MapTypeMode int index, int weekValue) {
+    public void updateMapMaker(int space, int density, Integer[] areaChoice) {
         ArrayList<PlaceDetailEntity> placeDetailEntities = new ArrayList<>();
         PlaceEntity placeEntity = FirebaseRepository.getInstance().getPlaceEntity();
+
         if (placeEntity != null) {
-            switch (index) {
-//                case TYPE_ROAD:
-//                    placeDetailEntities = placeEntity.getRoad();
-//                    break;
-//                case TYPE_ENVIRONMENT:
-//                    placeDetailEntities = placeEntity.getEnvironment();
-//                    break;
-//                case TYPE_TREE:
-//                    placeDetailEntities = placeEntity.getTree();
-//                    break;
-//                case TYPE_PARK:
-//                    placeDetailEntities = placeEntity.getPark();
-//                    break;
-//                case TYPE_OTHER:
-//                    placeDetailEntities = placeEntity.getOther();
-//                    break;
-            }
+            placeDetailEntities = placeEntity.getData();
         }
+
         if (googleMap != null) {
             googleMap.clear();
             googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
             for (int i = 0; i < placeDetailEntities.size(); i++) {
-//                int time = placeDetailEntities.get(i).getTime();
+                String district = placeDetailEntities.get(i).getDistrict();
+
+                if (isInTargetArea(areaChoice, district)) {
+                    LatLng latLng = new LatLng(placeDetailEntities.get(i).getLat(), placeDetailEntities.get(i).getLng());
+                    MarkerOptions markerOptions = new MarkerOptions()
+                            .icon(bitmapDescriptor)
+                            .anchor(0.0f, 1.0f) // Anchors the marker on the bottom left
+                            .position(latLng)
+                            .title("123");
+                    googleMap.addMarker(markerOptions);
+                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, googleMap.getCameraPosition().zoom));
+                }
+
 //                Log.d(TAG,"time:"+time);
 //                if (time <= weekValue) {
-//                    LatLng latLng = new LatLng(placeDetailEntities.get(i).getLat(), placeDetailEntities.get(i).getLon());
+//                LatLng latLng = new LatLng(placeDetailEntities.get(i).getLat(), placeDetailEntities.get(i).getLng());
 
 //                    int px = fragmentActivity.getResources().getDimensionPixelSize(R.dimen.map_dot_marker_size);
 //                    Bitmap mDotMarkerBitmap = Bitmap.createBitmap(px, px, Bitmap.Config.ARGB_8888);
 //                    Canvas canvas = new Canvas(mDotMarkerBitmap);
 //                    Drawable shape;
-//                    BitmapDescriptor bitmapDescriptor;
+//                BitmapDescriptor bitmapDescriptor;
 //                    switch (index) {
 //                        case TYPE_ROAD:
-//                            bitmapDescriptor = getMarkerIcon(ContextCompat.getColor(fragmentActivity, R.color.colorRoad));
+//                bitmapDescriptor = getMarkerIcon(ContextCompat.getColor(fragmentActivity, R.color.colorRoad));
 //                            break;
 //                        case TYPE_ENVIRONMENT:
 //                            bitmapDescriptor = getMarkerIcon(ContextCompat.getColor(fragmentActivity, R.color.colorEnvironment));
@@ -215,18 +218,18 @@ public class MapsPresenter extends BasePresenter<MapsContract.View> implements M
 //                            placeDetailEntities.get(i).getThumb(),
 //                            ("true".equals(placeDetailEntities.get(i).getResolve()) ? "已解決" : "未解決"));
 //
-//                    MarkerOptions markerOptions = new MarkerOptions()
-//                            .icon(bitmapDescriptor)
-//                            .anchor(0.0f, 1.0f) // Anchors the marker on the bottom left
-//                            .position(latLng);
-//                            .title(content)
-//                            .snippet(placeDetailEntities.get(i).getPictureUrl());//Bring picture url
+//                MarkerOptions markerOptions = new MarkerOptions()
+//                        .icon(bitmapDescriptor)
+//                        .anchor(0.0f, 1.0f) // Anchors the marker on the bottom left
+//                        .position(latLng)
+//                        .title("123");
+                // .snippet(placeDetailEntities.get(i).getPictureUrl());//Bring picture url
 
 //                    MapInfoWindowAdapter adapter = new MapInfoWindowAdapter(fragmentActivity);
 //                    googleMap.setInfoWindowAdapter(adapter);
 
-//                    googleMap.addMarker(markerOptions);
-//                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, googleMap.getCameraPosition().zoom));
+//                googleMap.addMarker(markerOptions);
+//                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, googleMap.getCameraPosition().zoom));
 //                }
             }
         }
@@ -258,6 +261,16 @@ public class MapsPresenter extends BasePresenter<MapsContract.View> implements M
 
         Log.d(TAG, "marker:" + marker.getTitle());
     }
+
+    private boolean isInTargetArea(Integer[] areaChoice, String districtChoice) {
+        for (int i = 0; i < areaChoice.length; i++) {
+            if (areaItem[areaChoice[i]].equals(districtChoice)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     @IntDef({TYPE_ROAD, TYPE_ENVIRONMENT, TYPE_TREE, TYPE_PARK, TYPE_OTHER})
     public @interface MapTypeMode {

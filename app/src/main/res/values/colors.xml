@@ -3,4 +3,13 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <!--Map type-->
+    <color name="colorRoad">#ff1744</color>
+    <color name="colorEnvironment">#d500f9</color>
+    <color name="colorTree">#3d5afe</color>
+    <color name="colorPark">#00e676</color>
+    <color name="colorOther">#ffff00</color>
+    <color name="colorQuestion">#ff6e40</color>
+
 </resources>

@@ -18,7 +18,7 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity {
 
     public final String TAG = getClass().getSimpleName();
-    Fragment mapFragment;
+    MapsFragment mapFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
             new MaterialDialog.Builder(this)
                     .title(R.string.choice_area)
                     .items(R.array.choice_area_item)
-                    .itemsCallbackMultiChoice(null, new MaterialDialog.ListCallbackMultiChoice() {
+                    .itemsCallbackMultiChoice(mapFragment.getAreaItem(), new MaterialDialog.ListCallbackMultiChoice() {
                         @Override
                         public boolean onSelection(MaterialDialog dialog, Integer[] which, CharSequence[] text) {
                             /**
@@ -80,6 +80,9 @@ public class MainActivity extends AppCompatActivity {
                              * (or the newly unselected check box to be unchecked).
                              * See the limited multi choice dialog example in the sample project for details.
                              **/
+                            //0:東, 1:西, 2:南, 3:北, 4:中
+                            mapFragment.updateAreaChoice(which);
+                            Log.d(TAG,"which:");
                             return true;
                         }
                     })
