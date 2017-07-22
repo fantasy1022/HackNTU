@@ -17,6 +17,7 @@
     </string-array>
 
     <string name="choice_positive">選擇</string>
+    <string name="title_activity_map_detail">MapDetailActivity</string>
 
 
 </resources>
