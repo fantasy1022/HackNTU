@@ -3,7 +3,6 @@ package com.fantasy1022.hackntu.presentation.map;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
-import android.support.annotation.IntDef;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
@@ -173,64 +172,27 @@ public class MapsPresenter extends BasePresenter<MapsContract.View> implements M
 
                 if (isInTargetArea(areaChoice, district)) {
                     LatLng latLng = new LatLng(placeDetailEntities.get(i).getLat(), placeDetailEntities.get(i).getLng());
+                    String content = String.format("成交時間:%s\n地址:%s\n土地移轉面積:%s\n建築物移轉面積:%s\n總價:%s\n單價:%s",
+                            placeDetailEntities.get(i).getSeason(),
+                            placeDetailEntities.get(i).getAddress(),
+                            placeDetailEntities.get(i).getLandarea(),
+                            placeDetailEntities.get(i).getBuildarea(),
+                            placeDetailEntities.get(i).getTotal(),
+                            placeDetailEntities.get(i).getPrice());
+
+
                     MarkerOptions markerOptions = new MarkerOptions()
                             .icon(bitmapDescriptor)
                             .anchor(0.0f, 1.0f) // Anchors the marker on the bottom left
                             .position(latLng)
-                            .title("123");
+                            .title(content);
+
+                    MapInfoWindowAdapter adapter = new MapInfoWindowAdapter(fragmentActivity);
+                    googleMap.setInfoWindowAdapter(adapter);
                     googleMap.addMarker(markerOptions);
                     googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, googleMap.getCameraPosition().zoom));
+
                 }
-
-//                Log.d(TAG,"time:"+time);
-//                if (time <= weekValue) {
-//                LatLng latLng = new LatLng(placeDetailEntities.get(i).getLat(), placeDetailEntities.get(i).getLng());
-
-//                    int px = fragmentActivity.getResources().getDimensionPixelSize(R.dimen.map_dot_marker_size);
-//                    Bitmap mDotMarkerBitmap = Bitmap.createBitmap(px, px, Bitmap.Config.ARGB_8888);
-//                    Canvas canvas = new Canvas(mDotMarkerBitmap);
-//                    Drawable shape;
-//                BitmapDescriptor bitmapDescriptor;
-//                    switch (index) {
-//                        case TYPE_ROAD:
-//                bitmapDescriptor = getMarkerIcon(ContextCompat.getColor(fragmentActivity, R.color.colorRoad));
-//                            break;
-//                        case TYPE_ENVIRONMENT:
-//                            bitmapDescriptor = getMarkerIcon(ContextCompat.getColor(fragmentActivity, R.color.colorEnvironment));
-//                            break;
-//                        case TYPE_TREE:
-//                            bitmapDescriptor = getMarkerIcon(ContextCompat.getColor(fragmentActivity, R.color.colorTree));
-//                            break;
-//                        case TYPE_PARK:
-//                            bitmapDescriptor = getMarkerIcon(ContextCompat.getColor(fragmentActivity, R.color.colorPark));
-//                            break;
-//                        case TYPE_OTHER:
-//                        default:
-//                            bitmapDescriptor = getMarkerIcon(ContextCompat.getColor(fragmentActivity, R.color.colorOther));
-//                            break;
-//                    }
-//                    String content = String.format("立案編號:%s\n陳情主旨:%s\n類別:%s\n立案時間:%s\n陳情地址:%s\n按讚人數:%s\n已解決:%s",
-//                            placeDetailEntities.get(i).getNum(),
-//                            placeDetailEntities.get(i).getQuestion(),
-//                            placeDetailEntities.get(i).getCategory(),
-//                            placeDetailEntities.get(i).getFilingTime(),
-//                            placeDetailEntities.get(i).getAddress(),
-//                            placeDetailEntities.get(i).getThumb(),
-//                            ("true".equals(placeDetailEntities.get(i).getResolve()) ? "已解決" : "未解決"));
-//
-//                MarkerOptions markerOptions = new MarkerOptions()
-//                        .icon(bitmapDescriptor)
-//                        .anchor(0.0f, 1.0f) // Anchors the marker on the bottom left
-//                        .position(latLng)
-//                        .title("123");
-                // .snippet(placeDetailEntities.get(i).getPictureUrl());//Bring picture url
-
-//                    MapInfoWindowAdapter adapter = new MapInfoWindowAdapter(fragmentActivity);
-//                    googleMap.setInfoWindowAdapter(adapter);
-
-//                googleMap.addMarker(markerOptions);
-//                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, googleMap.getCameraPosition().zoom));
-//                }
             }
         }
 
@@ -270,15 +232,5 @@ public class MapsPresenter extends BasePresenter<MapsContract.View> implements M
         }
         return false;
     }
-
-
-    @IntDef({TYPE_ROAD, TYPE_ENVIRONMENT, TYPE_TREE, TYPE_PARK, TYPE_OTHER})
-    public @interface MapTypeMode {
-    }
-
-    public static final int TYPE_ROAD = 0;
-    public static final int TYPE_ENVIRONMENT = 1;
-    public static final int TYPE_TREE = 2;
-    public static final int TYPE_PARK = 3;
-    public static final int TYPE_OTHER = 4;
+    
 }
