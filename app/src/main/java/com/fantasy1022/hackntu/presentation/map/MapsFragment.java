@@ -184,9 +184,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, MapsCo
     @Override
     public void onResume() {
         super.onResume();
-        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
-                .findFragmentById(R.id.map_fragment);
-        mapFragment.getMapAsync(this);
+//        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
+//                .findFragmentById(R.id.map_fragment);
+//        mapFragment.getMapAsync(this);
     }
 
     public void updateAreaChoice(Integer[] which) {

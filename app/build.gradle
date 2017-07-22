@@ -36,7 +36,7 @@ ext {
 
     //UI
     bubbleseekbarVersion = '3.5-lite'
-    materialDialogsVersion  = "0.9.4.5"
+    materialDialogsVersion = "0.9.4.5"
 
 }
 dependencies {
@@ -63,6 +63,8 @@ dependencies {
 
     compile "com.afollestad.material-dialogs:core:$materialDialogsVersion"
 
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'com.android.support:design:25.3.1'
 }
 
 apply plugin: 'com.google.gms.google-services'

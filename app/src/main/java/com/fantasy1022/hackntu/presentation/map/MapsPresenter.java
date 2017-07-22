@@ -219,7 +219,7 @@ public class MapsPresenter extends BasePresenter<MapsContract.View> implements M
 
     @Override
     public void onInfoWindowClick(Marker marker) {
-        //MapDetailActivity.newIntent(fragmentActivity,marker.getSnippet(),marker.getTitle());
+        MapDetailActivity.newIntent(fragmentActivity,marker.getSnippet(),marker.getTitle());
 
         Log.d(TAG, "marker:" + marker.getTitle());
     }
@@ -232,5 +232,5 @@ public class MapsPresenter extends BasePresenter<MapsContract.View> implements M
         }
         return false;
     }
-    
+
 }
